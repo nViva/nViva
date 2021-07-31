@@ -1,5 +1,12 @@
                            USER MANUALS
 ----------------------------------------------------------------------------
+Group Members: -NSHIMIYIMANA Viateur 219004387
+               -MBONYINSHUTI Fiston  219001243
+
+
+
+
+
 NPC Inventory System is a Web-based Application developped using:
  -PHP Programming
  -Php MyAdmin 
