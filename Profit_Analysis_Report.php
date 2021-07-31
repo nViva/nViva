@@ -102,6 +102,7 @@
                                                     <th scope="col">SALES VALUE</th>
                                                     <th scope="col">Quantity Damaged</th>
                                                     <th scope="col">Damages Value</th>
+                                                    <th scope="col">Date</th>
                                                     <th scope="col">PROFIT</th>
                            
 
@@ -117,9 +118,8 @@
                 $bb=$_POST["to_date"];
                $_SESSION['from']=$aa;
                $_SESSION['to']=$bb;
-               //mysql_query("insert into product VALUES(,'product_name','price','quant')");
-
-              $sql = "SELECT DISTINCT Products.productName,Sales.quantity AS sold,Products.purchasingPrice,Sales.selling_price,Sales.quantity*Sales.selling_price as sales_value,(Sales.quantity*Products.purchasingPrice) AS Purchases_value,Damages.quantity AS damaged,Damages.damagesDate,(Damages.quantity*Damages.selling_price) AS damages_value,(Sales.quantity*Sales.selling_price)-((Sales.quantity*Products.purchasingPrice)+(Damages.quantity*Damages.selling_price)) AS Profit FROM Products JOIN Sales ON Products.productId=Sales.productId JOIN Damages ON Products.productId=Damages.productId  WHERE (Sales.salesDate BETWEEN '$aa' AND '$bb' AND Damages.damagesDate BETWEEN '$aa' AND '$bb') ";
+               
+              $sql = "SELECT DISTINCT Products.productName,Sales.quantity AS sold,Products.purchasingPrice,Sales.selling_price,Sales.quantity*Sales.selling_price as sales_value,(Sales.quantity*Products.purchasingPrice) AS Purchases_value,Sales.salesDate AS sdate,(Sales.quantity*Sales.selling_price)-(Sales.quantity*Products.purchasingPrice) AS Profit FROM Products JOIN Sales ON Products.productId=Sales.productId  WHERE Sales.salesDate BETWEEN '$aa' AND '$bb' ";
                
                $result = $conn->query($sql);
                     $count=0;
@@ -145,8 +145,9 @@
                       <th><?php echo "<p style='text-align:center;color:black;'>".$row["Purchases_value"] ."</p>" ?></th>
                       <th><?php echo "<p style='text-align:center;color:black;'>".$row["selling_price"]  ."</p>"?></th>
                       <th><?php echo "<p style='text-align:center;color:black;'>".$row["sales_value"]  ."</p>"?></th>
-                      <th><?php echo "<p style='text-align:center;color:black;'>".$row["damaged"]  ."</p>"?></th>
-                      <th><?php echo "<p style='text-align:center;color:black;'>".$row["damages_value"]  ."</p>"?></th>
+                      <th><?php echo "<p style='text-align:center;color:black;'>0</p>"?></th>
+                      <th><?php echo "<p style='text-align:center;color:black;'>0</p>"?></th>
+                      <th><?php echo "<p style='text-align:center;color:black;'>".$row["sdate"]  ."</p>"?></th>
                       <th><?php if ($aaa<0) { ?>
                         
                        <font color="red"> <?php echo $aaa;} else{?></font> <?php  echo"<font color='black'>" .$aaa."</font>"; }?></th> 
@@ -155,7 +156,7 @@
             
                  $sum=$sum+$aaa; 
                  $sum2=$sum2+$row["sales_value"];
-                 $sum3=$sum3+$row["damages_value"];
+                 $sum3=$sum3;
                  $sum4=$sum4+$row["Purchases_value"];
                  }
                  }
@@ -163,52 +164,9 @@
                
 
 
-                  <?php  
-$sql3 = "SELECT DISTINCT Products.productName,Products.purchasingPrice,(Sales.quantity*Products.purchasingPrice) AS Purchases_Value,Sales.quantity AS Sold,Sales.salesDate,Sales.selling_price,(Sales.quantity*Sales.selling_price) AS Sales_Value,Sales.productId,(Sales.quantity*Sales.selling_price)-(Sales.quantity*Products.purchasingPrice) AS profit FROM Products  JOIN Sales ON Products.productId=Sales.productId JOIN Damages WHERE Sales.productId NOT IN(SELECT productId FROM Damages WHERE Damages.damagesDate BETWEEN '".$aa."' AND '".$bb."') AND Sales.salesDate BETWEEN '".$aa."' AND '".$bb."'";
-               
-               $result3 = $conn->query($sql3);
-                    $count=$count;
-                    $sum=$sum;
-                  $sum2=$sum2;
-                  $sum3=$sum3;
-                  $sum4=$sum4;
-               if ($result3 -> num_rows >  0) {
-                  
-                 while ($row3 = $result3->fetch_assoc()) 
-                 {
-
-
-                     
-
-                  $count=$count+1;?>
-                 <tr class="database-data" style="background-color: #2196f3;">   <th><?php echo "<p style='text-align:center;color:black;'>".$count."</p>"?></th>
-                      <th><?php echo "<p style='text-align:center;color:black;'>".$row3["productName"] ."</p>"?></th>
-                      <th><?php echo "<p style='text-align:center;color:black;'>".$row3["purchasingPrice"] ."</p>" ?></th>
-                      <th><?php echo "<p style='text-align:center;color:black;'>".$row3["Sold"] ."</p>" ?></th>
-                      <th><?php echo "<p style='text-align:center;color:black;'>".$row3["Purchases_Value"] ."</p>" ?></th>
-                      <th><?php echo "<p style='text-align:center;color:black;'>".$row3["selling_price"] ."</p>"?></th>
-                      <th><?php echo "<p style='text-align:center;color:black;'>".$row3["Sales_Value"] ."</p>"?></th>
-                      <th><?php echo "<p style='text-align:center;color:black;'>0</p>"?></th>
-                      <th><?php echo "<p style='text-align:center;color:black;'>0</p>"?></th>
-                      <th><?php if ($row3["profit"]<0) { ?>
-                        
-                       <font color="red"> <?php echo $row3["profit"];} else{?></font> <?php echo"<font color='black'>" .$row3["profit"]."</font>"; }?></th>   
-                    
-                 </tr>
-                 <?php 
-
-                 $sum=$sum+$row3["profit"]; 
-                 $sum2=$sum2+$row3["Sales_Value"];
-                 $sum3=$sum3;
-                 $sum4=$sum4+$row3["Purchases_Value"];
-}
-}
-                 ?>
-
-
 
                   <?php  
-$sql2 = "SELECT DISTINCT Products.productName,Products.purchasingPrice,(Damages.quantity*Products.purchasingPrice) AS purchases_value,Damages.quantity AS damaged,Damages.damagesDate,Damages.selling_price,(Damages.quantity*Damages.selling_price) AS damages_value,Damages.productId FROM Products  JOIN Damages ON Products.productId=Damages.productId JOIN Sales WHERE Damages.productId NOT IN(SELECT productId FROM Sales WHERE Sales.salesDate BETWEEN '".$aa."' AND '".$bb."') AND Damages.damagesDate BETWEEN '".$aa."' AND '".$bb."'";
+$sql2 = "SELECT DISTINCT Products.productName,Products.purchasingPrice,(Damages.quantity*Products.purchasingPrice) AS purchases_value,Damages.quantity AS damaged,Damages.damagesDate,Damages.selling_price,(Damages.quantity*Damages.selling_price) AS damages_value,Damages.productId,Damages.damagesDate AS ddate FROM Products  JOIN Damages ON Products.productId=Damages.productId WHERE Damages.damagesDate BETWEEN '".$aa."' AND '".$bb."'";
                
                $result2 = $conn->query($sql2);
                     $count=$count;
@@ -234,6 +192,7 @@ $sql2 = "SELECT DISTINCT Products.productName,Products.purchasingPrice,(Damages.
                       <th><?php echo "<p style='text-align:center;color:black;'>0</p>"?></th>
                       <th><?php echo "<p style='text-align:center;color:black;'>".$row2["damaged"] ."</p>"?></th>
                       <th><?php echo "<p style='text-align:center;color:black;'>".$row2["damages_value"] ."</p>"?></th>
+                      <th><?php echo "<p style='text-align:center;color:black;'>".$row2["ddate"]  ."</p>"?></th>
                       <th><font color="red"> <?php echo -$row2["damages_value"] ?></font></th>  
                     
                  </tr>
@@ -248,17 +207,17 @@ $sql2 = "SELECT DISTINCT Products.productName,Products.purchasingPrice,(Damages.
                  ?>
                  <?php
                
-               if($result -> num_rows>0 || $result3 -> num_rows>0 || $result2 -> num_rows>0){
+               if($result -> num_rows>0 || $result2 -> num_rows>0){
 
                 ?>
-                 <tr style='font-size:24px;;color:black;background-color: #979A99'><th>Total</th><th></th><th></th><th></th><th><?php echo $sum4; ?></th><th><th><?php echo $sum2; ?></th></th><th></th><th><?php echo $sum3; ?></th><th><?php echo $sum ?></th></tr>
+                 <tr style='font-size:24px;;color:black;background-color: #979A99'><th>Total</th><th></th><th></th><th></th><th><?php echo $sum4; ?></th><th><th><?php echo $sum2; ?></th></th><th></th><th><?php echo $sum3; ?></th><th></th><th><?php echo $sum ?></th></tr>
                  <tr><th>
                <!-- <button id="PrintButton" onclick="printy()">Print</button> -->
                <a href="Profit_Report_Print.php" >Print</a>
                 </th></tr><?php } ?>
                  <?php
                
-               if($result -> num_rows===0 && $result3 -> num_rows===0 && $result2 -> num_rows===0){
+               if($result -> num_rows===0 && $result2 -> num_rows===0){
 
                 ?>
                 <tr class="database-data" style='font-size:24px;font-weight: bold;color: red;'> <th colspan="6">No Record Found for the selected dates!!!</th></tr>
