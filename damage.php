@@ -1,4 +1,5 @@
 <?php 
+
   session_start(); 
 
   $product_count=$_SESSION['productcount'];

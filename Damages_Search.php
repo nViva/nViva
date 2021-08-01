@@ -105,7 +105,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-      <?php 
+      <?php
                $conn = new mysqli("localhost","root","","NPC");
                $mysearch=$_POST["search"];
                $result = mysqli_query($conn, "SELECT * FROM Products WHERE balance!='0' AND productName LIKE '%$mysearch%' ");
@@ -132,7 +132,8 @@ $row[$i]= mysqli_fetch_array($result);
                       
                     </tr>
                     
-            <?php
+            <?php        
+            
                  
                  }
                  ?>
