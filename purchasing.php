@@ -10,6 +10,7 @@ $purchased=mysqli_query($conn, "UPDATE Products set purchasingPrice='" . $_POST[
 $sd=1;
 if($sd)
 {
+ 
     $d=$_POST["datee"];
 if(empty($_POST["quant"][$i]))
 {

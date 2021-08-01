@@ -4,6 +4,7 @@
   $product_count=$_SESSION['productcount'];
 ?>
 <?php
+
 $conn = new mysqli("localhost","root","","NPC");
 	   $d=$_POST["date"];
 for($i=0;$i<$product_count;$i++) {
