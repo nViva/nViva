@@ -12,7 +12,6 @@
   header("location: login.php");
   }
 ?>
-
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8">
@@ -119,7 +118,7 @@ $rowCount = count($products);
 }
 $_SESSION['productcount'] = $usersCount;
 for($i=0;$i<$rowCount;$i++) {
-$result = mysqli_query($conn, "SELECT * FROM Products WHERE productName LIKE '%$mysearch%'");
+$result = mysqli_query($conn, "SELECT * FROM Products WHERE productName LIKE '%$mysearch%' AND productId='" . $products[$i] . "'");
 $row[$i]= mysqli_fetch_array($result);
 ?>
                 

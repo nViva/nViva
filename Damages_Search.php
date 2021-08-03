@@ -105,7 +105,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-      <?php
+      <?php 
                $conn = new mysqli("localhost","root","","NPC");
                $mysearch=$_POST["search"];
                $result = mysqli_query($conn, "SELECT * FROM Products WHERE balance!='0' AND productName LIKE '%$mysearch%' ");
@@ -117,7 +117,7 @@ $rowCount = count($products);
 }
 $_SESSION['productcount'] = $usersCount;
 for($i=0;$i<$rowCount;$i++) {
-$result = mysqli_query($conn, "SELECT * FROM Products WHERE productName LIKE '%$mysearch%' ");
+$result = mysqli_query($conn, "SELECT * FROM Products WHERE productName LIKE '%$mysearch%' AND productId='" . $products[$i] . "'");
 $row[$i]= mysqli_fetch_array($result);
 ?>
                 
@@ -132,8 +132,7 @@ $row[$i]= mysqli_fetch_array($result);
                       
                     </tr>
                     
-            <?php        
-            
+            <?php
                  
                  }
                  ?>
